@@ -64,19 +64,16 @@ const MapsComponent: React.FC<MapsComponentProps> = ({
 
   const removeUser = async (email: string) => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/Files/remove-User`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            user_email: email,
-            admin_email: admins,
-          }),
-        }
-      );
+      await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/Files/remove-User`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_email: email,
+          admin_email: admins,
+        }),
+      });
     } catch (error) {
       console.log("dialog box error: ", error);
     }
@@ -84,11 +81,7 @@ const MapsComponent: React.FC<MapsComponentProps> = ({
 
   useEffect(() => {
     socket.connect();
-    socket.on("dataChange", (data) => {
-      console.log(data);
-      setcorrdsList(updateUser(data.documentKey._id, data));
-      console.log("Static Data:  ", CorrdsList);
-    });
+    console.log("socket connected");
 
     // const interval = setInterval(finalizeLocation, 10000);
 
@@ -99,6 +92,29 @@ const MapsComponent: React.FC<MapsComponentProps> = ({
       socket.disconnect();
     };
   }, []);
+
+  socket.on("dataChange", async (data) => {
+    console.log(data);
+    setcorrdsList(updateUser(data.documentKey._id, data));
+
+    console.log("Static Data:  ", CorrdsList);
+    const userWithId = CorrdsList.find(
+      (user) => user._id === data.documentKey._id
+    );
+
+    // if(user doesnt exist){
+    if (!userWithId) {
+      await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/Files/add-User`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: data.documentKey._id,
+        }),
+      });
+    }
+  });
 
   const { error, circleTime, mapCenter, calculateDistance } = Maphooks();
 
@@ -174,7 +190,8 @@ const MapsComponent: React.FC<MapsComponentProps> = ({
                       mapCenter.lng,
                       coords.location.latitude,
                       coords.location.longitude
-                    ) <= 8
+                    ) <= 8 &&
+                    coords.danger
                   ) {
                     return (
                       <MarkerF

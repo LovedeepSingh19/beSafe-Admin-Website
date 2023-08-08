@@ -10,6 +10,7 @@ import {
   Icon,
   Stack,
   Button,
+  Box,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
@@ -41,72 +42,65 @@ const ListOfAppUsers: React.FC<ListOfAppUsersProps> = ({
 
   const filteredUsers = users.filter(
     (user) =>
-      user.danger ||
+      (user.danger) 
+      &&(
       calculateDistance(
         mapCenter.lat,
         mapCenter.lng,
         user.location.latitude,
         user.location.longitude
-      ) <= 8
+      ) <= 8)
   );
 
   return (
     <Flex align={"center"} justify={"center"} direction={"column"}>
-      <Flex>
-        <Text pb={5} mr={10} fontWeight={700}>
-          List of Users
-        </Text>
-      </Flex>
-      <Flex
-        mr={10}
-        align={"center"}
-        justify={"center"}
-        border={"1px solid red"}
-        borderRadius={10}
-      >
-        {filteredUsers.length ?
-        <List p={8}>
-          {filteredUsers.map(
-            (user) => (
-              console.log(user),
-              (
-                <Stack direction={"column"}>
-                  <ListItem
-                    m={2}
-                    key={user._id}
-                    cursor={"pointer"}
-                    onClick={() => {
-                      setInfoWindow(true);
-                      setCoord({
-                        lat: user.location.latitude,
-                        lng: user.location.longitude,
-                        name: user.name,
-                        email: user.email,
-                        phone: user?.phone,
-                      });
-                    }}
-                    p={2}
-                    // border={"1px solid"}
-                    borderRadius={4}
-                    // _hover={{ bg: "brand.400" }}
-                    // onClickCapture={() => {}}
-                  >
-                    <Button>
-                      {user.name}
-                      {/* <SmallCloseIcon /> */}
-                    </Button>
-                  </ListItem>
-                </Stack>
-              )
-            )
-          )}
-        </List> :
-        <Flex>
-          <Text p={4}>No One is in danger atleast in 8km radius from you</Text>
-        </Flex>
-        }
-      </Flex>
+    <Flex>
+      <Text pb={5} mr={10} fontWeight={700}>
+        List of Users
+      </Text>
     </Flex>
+    <Flex
+      mr={10}
+      align={"center"}
+      justify={"center"}
+      border={"1px solid red"}
+      borderRadius={10}
+    >
+      {filteredUsers.length ? (
+        <Box overflowY="auto" maxHeight="400px">
+          <List p={8}>
+            {filteredUsers.map((user) => (
+              <Stack direction={"column"} key={user._id}>
+                <ListItem
+                  m={2}
+                  cursor={"pointer"}
+                  onClick={() => {
+                    setInfoWindow(true);
+                    setCoord({
+                      lat: user.location.latitude,
+                      lng: user.location.longitude,
+                      name: user.name,
+                      email: user.email,
+                      phone: user?.phone,
+                    });
+                  }}
+                  p={2}
+                  borderRadius={4}
+                >
+                  <Button>{user.name}</Button>
+                </ListItem>
+              </Stack>
+            ))}
+          </List>
+        </Box>
+      ) : (
+        <Flex>
+          <Text p={4}>No One is in danger at least in an 8km radius from you</Text>
+        </Flex>
+      )}
+    </Flex>
+  </Flex>
+  
   );
 };
 export default ListOfAppUsers;

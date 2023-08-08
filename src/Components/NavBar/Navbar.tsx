@@ -29,15 +29,11 @@ const cookies = new Cookies();
 const token = cookies.get("x-auth-token");
 const Links2: LinkType[] = [
   { title: "Home" },
-  { title: "Emergency" },
-  { title: "About" },
 ];
 
 // returns route if there is a valid token set in the cookie
 const Links: LinkType[] = [
   { title: "Home" },
-  { title: "Emergency" },
-  { title: "About" },
   { title: "Maps" },
 ];
 
@@ -104,12 +100,6 @@ const NavBar: React.FC = () => {
     if (token) {
       fetchUserList();
     }
-      const intervalId = setTimeout(fetchUserList, 30000);
-
-      // Clean up the interval when the component unmounts
-      return () => {
-        clearTimeout(intervalId);
-      };
     // Fetch user list only if token is available
   }, []);
 
