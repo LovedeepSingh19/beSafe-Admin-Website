@@ -1,5 +1,11 @@
 import {
   Alert,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   AlertIcon,
   AlertTitle,
   Button,
@@ -9,7 +15,8 @@ import {
   Heading,
   Input,
   Stack,
-  useColorModeValue
+  useColorModeValue,
+  useDisclosure
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -53,9 +60,7 @@ const Signup: React.FC<SignupProps> = () => {
       const data = await response.json();
       console.log(data.user_id);
       if (response.status === 200) {
-
-        router.push("/Files/Home");
-        
+        setOpen(true)    
       } else {
         setError("Error: " + data);
       }
@@ -65,13 +70,18 @@ const Signup: React.FC<SignupProps> = () => {
     }
   };
 
+  const [isOpen, setOpen] = useState(false)
+  const cancelRef = React.useRef(null)
+
   return (
+    <>
     <Flex
       minH={"100vh"}
       align={"center"}
       justify={"center"}
       bg={useColorModeValue("gray.50", "gray.800")}
     >
+     
       <Stack
         spacing={4}
         w={"full"}
@@ -85,6 +95,7 @@ const Signup: React.FC<SignupProps> = () => {
         <Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
           Admin SignUp
         </Heading>
+        <form onSubmit={onSubmit}>
         <FormControl id="userName" isRequired>
           <FormLabel>User name</FormLabel>
           <Input
@@ -115,7 +126,7 @@ const Signup: React.FC<SignupProps> = () => {
             onChange={onChange}
           />
         </FormControl>
-        <FormControl id="password" isRequired>
+        <FormControl pb={5} id="confirm-password" isRequired>
           <FormLabel>Confirm Password</FormLabel>
           <Input
             name="confirm_password"
@@ -135,7 +146,7 @@ const Signup: React.FC<SignupProps> = () => {
           >
             Cancel
           </Button>
-          <Button colorScheme="teal" w="full" onClick={onSubmit}>
+          <Button colorScheme="teal" w="full" type="submit">
             Submit
           </Button>
         </Stack>
@@ -145,8 +156,36 @@ const Signup: React.FC<SignupProps> = () => {
             <AlertTitle>{error}</AlertTitle>
           </Alert>
         )}
+        </form>
       </Stack>
     </Flex>
+      <>
+
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={() => setOpen(false)}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+              Delete Customer
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Signup Successful. Please Login With the same credentials.
+            </AlertDialogBody>
+            <AlertDialogFooter>
+            <Button ref={cancelRef} onClick={() => {setOpen(false);router.push("/Files/Home");}}>
+              Okay
+            </Button>
+          </AlertDialogFooter>
+
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+    </>
+    </>
   );
 };
 export default Signup;

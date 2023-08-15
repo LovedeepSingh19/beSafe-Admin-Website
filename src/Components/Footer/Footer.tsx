@@ -8,6 +8,7 @@ import {
   Image,
   Stack,
   Text,
+  useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react";
 import {
@@ -23,8 +24,11 @@ import React from "react";
 
 const Footer: React.FC = () => {
   const { colorMode } = useColorMode();
+  const isDesktop = useBreakpointValue({ base: false, md: true });
+
+
   return (
-    <Container mt="5" maxW="100%" zIndex={2}>
+    <Container pl={isDesktop? "100pt": "80pt"} mt="5" maxW="100%" zIndex={2}>
       <Divider />
       <Stack
         spacing="8"

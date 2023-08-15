@@ -91,6 +91,7 @@ const AuthModal: React.FC<AuthModalProps> = () => {
         <ModalContent>
           <ModalHeader>Create your account</ModalHeader>
           <ModalCloseButton />
+            <form onSubmit={onSubmit}>
           <ModalBody pb={6}>
             <FormControl>
               <FormLabel>Email</FormLabel>
@@ -133,13 +134,14 @@ const AuthModal: React.FC<AuthModalProps> = () => {
                 SignUp
               </Text>
               <Flex>
-                <Button onClick={onSubmit} colorScheme="teal" mr={3}>
+                <Button type="submit" colorScheme="teal" mr={3}>
                   Submit
                 </Button>
                 <Button onClick={handleOnClose}>Cancel</Button>
               </Flex>
             </Flex>
           </ModalFooter>
+              </form>
         </ModalContent>
       </Modal>
     </>

@@ -99,6 +99,8 @@ const NavBar: React.FC = () => {
   useEffect(() => {
     if (token) {
       fetchUserList();
+    }else{
+        router.push("/")
     }
     // Fetch user list only if token is available
   }, []);
@@ -142,6 +144,7 @@ const NavBar: React.FC = () => {
           <HStack spacing={8} alignItems={"center"}>
             <HStack
               as={"nav"}
+              pl={userListLoaded? 0 : 20}
               fontWeight={700}
               spacing={4}
               display={{ base: "none", md: "flex" }}
@@ -162,16 +165,19 @@ const NavBar: React.FC = () => {
                 onClick={toggleColorMode}
               />
             </Button>
-            <ProfileDropDown />
+            <ProfileDropDown userListLoaded={userListLoaded} />
           </Flex>
         </Flex>
 
         {isOpen ? (
           <Box fontWeight={700} pb={4} display={{ md: "none" }}>
             <Stack as={"nav"} spacing={4}>
-              {Links.map((link) => (
-                <NavLink key={link.title}>{link}</NavLink>
-              ))}
+            {userListLoaded &&
+                Links.map((link) => <NavLink key={link.title}>{link}</NavLink>)}
+              {!userListLoaded &&
+                Links2.map((link) => (
+                  <NavLink key={link.title}>{link}</NavLink>
+                ))}
             </Stack>
           </Box>
         ) : null}
