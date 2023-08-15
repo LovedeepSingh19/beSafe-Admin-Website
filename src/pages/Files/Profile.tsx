@@ -17,11 +17,6 @@ const UserProfile = () => {
       <Flex direction={"column"} alignItems="center" mb={4}>
         <Avatar size="lg" src={""} mr={4} />
         <Box pt={4}>
-            <Stack align={'center'} justify={'center'} direction={'row'}>
-          <Text fontSize="lg">Name: </Text>
-          <Text fontSize="xl">{admin.split('@')[0]}</Text>
-
-            </Stack>
             <Stack align={'center'} justify={'center'} direction={"row"}>
           <Text fontSize="lg">id: </Text>
           <Text fontSize='xl'>{admin}</Text>
