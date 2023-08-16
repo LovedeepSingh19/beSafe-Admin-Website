@@ -9,7 +9,11 @@ const UserProfile = () => {
   const admins = useRecoilValue(adminUserState);
   
   console.log(admins);
-  const admin = admins as unknown as string
+  var admin;
+  if(admins.admin !== ''){
+    admin = admins.admin as unknown as string
+
+  }
 
   return (
     <Flex direction={'column'} pt={100} align={'center'} justify={'center'}>
@@ -19,7 +23,9 @@ const UserProfile = () => {
         <Box pt={4}>
             <Stack align={'center'} justify={'center'} direction={"row"}>
           <Text fontSize="lg">id: </Text>
+          {admin &&
           <Text fontSize='xl'>{admin}</Text>
+          }
 
             </Stack>
         </Box>
